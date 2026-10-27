@@ -1,0 +1,17 @@
+{
+  "name": "yj2-water-auto",
+  "version": "1.0.0",
+  "private": true,
+  "description": "水控智联 —— 水利自动化虚拟监测平台（含 Node + Express 跨设备评论系统）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
