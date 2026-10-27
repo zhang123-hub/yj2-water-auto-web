@@ -17,11 +17,13 @@ const cors = require('cors')
 
 const app = express()
 
-// Render 会通过环境变量注入端口；本地未设置时默认 3000
+// Railway 会通过环境变量注入端口；本地未设置时默认 3000
 const PORT = process.env.PORT || 3000
+// 显式绑定 0.0.0.0，适配 Railway 容器环境，本地同样可用
+const HOST = process.env.HOST || '0.0.0.0'
 
 // 评论数据文件：默认与 server.js 同级，首次写入时自动创建
-// 如需挂载 Render 持久磁盘，可通过环境变量 COMMENTS_FILE 指定绝对路径
+// 如需挂载外部持久磁盘，可通过环境变量 COMMENTS_FILE 指定绝对路径
 const COMMENTS_FILE = process.env.COMMENTS_FILE || path.join(__dirname, 'comments.json')
 
 const DEFAULT_NICKNAME = '匿名访客'
@@ -31,7 +33,7 @@ const MAX_CONTENT_LENGTH = 500
 // ---------- 中间件 ----------
 
 // 跨域配置：允许任意来源访问接口
-// 这样本地 localhost 调试、GitHub Pages 前端、Render 线上域名都能正常请求
+// 这样本地 localhost 调试、GitHub Pages 前端、Railway 线上域名都能正常请求
 app.use(cors())
 
 // 解析 JSON 请求体；限制 16KB，避免超大请求占用资源
@@ -129,8 +131,8 @@ app.post('/api/comments', (req, res) => {
 
 // ---------- 启动 ----------
 
-// 监听 0.0.0.0，便于 Render 容器内的健康检查访问
-app.listen(PORT, '0.0.0.0', () => {
+// 监听 0.0.0.0:PORT，适配 Railway 容器网络；本地开发同样可用
+app.listen(PORT, HOST, () => {
   console.log(`服务已启动：http://localhost:${PORT}`)
   console.log(`评论接口：GET/POST http://localhost:${PORT}/api/comments`)
 })
